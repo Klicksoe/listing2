@@ -1,0 +1,15 @@
+site.title: Titre du site
+site.listing: Listing
+site.home: Accueil
+site.profil: Profil
+site.login: Connexion
+site.logout: Déconnexion
+site.username: Nom d'utilisateur
+site.password: Mot de passe
+site.admin: Administration
+couchpotato.index: Tous les films
+couchpotato.last: 100 Derniers films
+sickbeard.index: Toutes les séries
+sickbeard.last: 100 Derniers épisodes
+sickbeard.season: Saison
+sickbeard.episode: Épisode

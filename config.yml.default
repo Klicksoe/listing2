@@ -1,0 +1,43 @@
+site:
+    theme: bootstrap
+    base: /
+database:
+    host: localhost
+    user: root
+    pass: ""
+    base: listing
+providers:
+    series:
+        title: Séries
+        type: sickbeard
+        start_path: "/volume1/video/séries/"
+        download: 1
+        config:
+            host: 192.168.0.203
+            port: 8083
+            basename: /
+            api_key: 123
+    films:
+        title: Films
+        type: couchpotato
+        download: 0
+        start_path: "/volume1/video/films/"
+        config:
+            host: 192.168.0.203
+            port: 5053
+            basename: /
+            api_key: 456
+    filmsanimation:
+        title: Films d'animation
+        type: couchpotato
+        download: 1
+        start_path: "/volume1/video/films d'animation/"
+        config:
+            host: 192.168.0.203
+            port: 5053
+            basename: /
+            api_key: 123
+    bd456
+        title: BD
+        type: link
+        link: http://google.fr/

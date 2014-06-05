@@ -1,0 +1,36 @@
+{% extends "layout.twig" %}
+
+{%  block content %}
+<div class="container">
+<div class="page-header" id="banner"></div>
+<h2>{{ app.translator.trans(title) }}</h2>
+<hr />
+{% for movie in data %}
+<div class="bs-docs-section">
+<div class="row">
+	<div class="col-lg-2 text-center">
+		<img class="lazy" data-original="{{ movie.image }}" alt="{{ movie.name }}" />
+	</div>
+	{% if config['providers'][focus]['download'] %}
+	<div class="col-lg-9">
+		<h2 style="display: inline-block;">{{ movie.name }}</h2>
+		<div style="display: inline-block; float: right;">{{ movie.quality }} - Note : <a class="text-right" href="http://www.imdb.com/title/{{ movie.imdb }}/" target="_blank">{{ movie.noteimdb }}</a></div>
+		<p class="text-justify">{{ movie.synopsis }}</p>
+	</div>
+	<div class="col-lg-1 text-center">
+		{% for file in movie.files|split(';') %}
+			<a class="glyphicon glyphicon-download" target="_blank" href="{{ app.request.getSchemeAndHttpHost() ~ app.request.getBaseURL() }}/uploads{{ file }}"></a>
+		{% endfor %}
+	</div>
+	{% else %}
+	<div class="col-lg-10">
+			<h2 style="display: inline-block;">{{ movie.name }}</h2>
+			<div style="display: inline-block; float: right;">{{ movie.quality }} - Note : <a class="text-right" href="http://www.imdb.com/title/{{ movie.imdb }}/" target="_blank">{{ movie.noteimdb }}</a></div>
+			<p class="text-justify">{{ movie.synopsis }}</p>
+	</div>
+	{% endif %}
+</div>
+</div>
+{% endfor %}
+</div>
+{% endblock %}

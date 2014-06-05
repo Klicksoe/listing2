@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta charset="utf-8" />
+	<title>{{ app.translator.trans('site.title') }}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+	<script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+	$(function() {
+		$("img.lazy").lazyload();
+		$("img.lazyseries").lazyload();
+		$(".popover-link").popover({
+			html : true,
+			container : 'body',
+			placement : 'left',
+			content: function() {
+				return $("#" + $(this).attr('id') + "-hidden").html();
+			}
+		});
+	});
+	</script>
+	<style>
+	h2 { margin-top:0px; }
+	p { text-align:justify; }
+	.row { margin:0px 0px 20px;padding:5px; }
+	.lazy { max-height:150px; max-width:100px; }
+	.bs-glyphicons .glyphicon { display: inline-block; margin:5px; font-size: 25px; }
+	a.glyphicon:hover { text-decoration:none; }
+	img.lazy { width:100px; height:133px; }
+	.glyphicon { font-size:1.2em; top:0px; }
+	</style>
+</head>
+<body>
+	{% include 'menu.twig' %}
+	{% block content %}{% endblock %}
+</body>
+</html>

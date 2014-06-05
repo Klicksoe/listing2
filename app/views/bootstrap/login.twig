@@ -1,0 +1,5 @@
+{% if is_granted('ROLE_ADMIN') %}
+	{% include 'index.twig' %}
+{% else %}
+	{% include 'login.form.twig' %}
+{% endif %}
