@@ -3,7 +3,9 @@ listing2
 
 Installer composer https://getcomposer.org/download/
 Installer les packages python nécesaires :
-# apt-get install python-mysqldb python-yaml
+```
+apt-get install python-mysqldb python-yaml
+```
 
 Configurer le fichier config.yml sur la base de config.yml.default
 
