@@ -20,6 +20,19 @@ SET time_zone = "+00:00";
 -- Base de données :  `listing`
 --
 
+
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `config`
+--
+
+CREATE TABLE IF NOT EXISTS `config` (
+  `name` varchar(50) NOT NULL,
+  `value` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 -- --------------------------------------------------------
 
 --

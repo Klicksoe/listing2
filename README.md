@@ -1,6 +1,9 @@
 listing2
 ========
 
+Cette appli web est juste un TEST, un paliatif à un changement dans la structure de couchpotato ne fournissant plus de date correcte sur l'ajout de films
+En attendant une version plus complète avec plus d'options...
+
 Installer composer https://getcomposer.org/download/
 
 Puis lancer l'install des paquets via composer 
