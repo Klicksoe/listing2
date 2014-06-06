@@ -37,7 +37,7 @@ providers:
             port: 5053
             basename: /
             api_key: 123
-    bd456
+    bd456:
         title: BD
         type: link
         link: http://google.fr/
