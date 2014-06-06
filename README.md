@@ -8,7 +8,7 @@ Installer composer https://getcomposer.org/download/
 
 Puis lancer l'install des paquets via composer 
 ```
-composer install
+php composer.phar install
 ```
 
 Installer les packages python nécesaires :
