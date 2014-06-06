@@ -23,7 +23,7 @@ Configurer le fichier config.yml sur la base de config.yml.default
 Configurer le fichier web/.htaccess sur la base de web/.htaccess.default
 
 ####TODO :
-* modifier les scripts python pour n'update qu'une fois chaque instance et non chaque fois que celle-ci est appellée
+* modifier les scripts python pour n'update qu'une fois chaque instance et non chaque fois que celle-ci est renseignée
 * partie administration
 * ajout de headphones
 * ajout d'un gestionnaire de BD
