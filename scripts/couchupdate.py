@@ -15,7 +15,7 @@ class couchupdate:
 				dataprovider['port'] = str(provider['config']['port'])
 				dataprovider['api_key'] = str(provider['config']['api_key'])
 				dataprovider['basename'] = str(provider['config']['basename'])
-				allcouch[name] = dataprovider
+				allcouch[dataprovider['host'] + dataprovider['port'] + dataprovider['basename'] + dataprovider['api_key']] = dataprovider
 		return allcouch
 	
 	def getConfiguration(self):

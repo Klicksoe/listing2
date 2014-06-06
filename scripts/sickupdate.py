@@ -15,7 +15,7 @@ class sickupdate:
 				dataprovider['port'] = str(provider['config']['port'])
 				dataprovider['api_key'] = str(provider['config']['api_key'])
 				dataprovider['basename'] = str(provider['config']['basename'])
-				allsick[name] = dataprovider
+				allsick[dataprovider['host'] + dataprovider['port'] + dataprovider['basename'] + dataprovider['api_key']] = dataprovider
 		return allsick
 	
 	def getConfiguration(self):
