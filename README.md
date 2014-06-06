@@ -22,6 +22,11 @@ Configurer le fichier config.yml sur la base de config.yml.default
 
 Configurer le fichier web/.htaccess sur la base de web/.htaccess.default
 
+####Auto update configuration exemple (crontab)
+```
+0 */2 * * * cd /var/www/listing2/scripts/; python cron.py update
+```
+
 ####TODO :
 * modifier les scripts python pour n'update qu'une fois chaque instance et non chaque fois que celle-ci est renseignée
 * partie administration
