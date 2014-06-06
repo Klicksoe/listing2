@@ -63,12 +63,12 @@ class couchupdate:
 										quality = files['quality']
 										for file in files['files']['movie']:
 											releases = releases + file + ';'
-										releases = releases[:-1]
-										try:
-											rating = movie['info']['rating']['imdb'][0]
-										except:
-											rating = 0								
-										cursor.execute("UPDATE `couchpotato` SET `name`=%s, `synopsis`=%s, `_id`=%s, `noteimdb`=%s, `quality`=%s, `image`=%s, `updated`='1', `files`=%s WHERE `imdb`=%s", (movie['title'], movie['info']['plot'], movie['_id'], str(rating), quality, poster, releases, movie['identifiers']['imdb']))
+								try:
+									rating = movie['info']['rating']['imdb'][0]
+								except:
+									rating = 0
+								releases = releases[:-1]
+								cursor.execute("UPDATE `couchpotato` SET `name`=%s, `synopsis`=%s, `_id`=%s, `noteimdb`=%s, `quality`=%s, `image`=%s, `updated`='1', `files`=%s WHERE `imdb`=%s", (movie['title'], movie['info']['plot'], movie['_id'], str(rating), quality, poster, releases, movie['identifiers']['imdb']))
 						except MySQLdb.Error, e:
 							try:
 								print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
@@ -84,16 +84,19 @@ class couchupdate:
 								poster = movie['info']['images']['poster'][0]
 							else:
 								poster = ""
-							files = ""
+							quality = ""
+							releases = ""
 							if len(movie['releases']) > 0:
-								quality = movie['releases'][0]['quality']
-								for file in movie['releases'][0]['files']['movie']:
-									files = files + file + ';'
-								files = files[:-1]
+								for files in movie['releases']:
+									if 'files' in files:
+										quality = files['quality']
+										for file in files['files']['movie']:
+											releases = releases + file + ';'
 								try:
 									rating = movie['info']['rating']['imdb'][0]
 								except:
-									rating = 0			
+									rating = 0
+								releases = releases[:-1]		
 								cursor.execute("INSERT INTO `couchpotato` (`name`,`synopsis`,`imdb`,`noteimdb`,`quality`,`_id`, `image`, `files`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (movie['title'], movie['info']['plot'], movie['identifiers']['imdb'], str(rating), quality, movie['_id'], poster, files))
 						except MySQLdb.Error, e:
 							try:
