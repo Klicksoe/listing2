@@ -60,7 +60,7 @@ class couchupdate:
 							if len(movie['releases']) > 0:
 								for files in movie['releases']:
 									if 'files' in files:
-										quality = file['quality']
+										quality = files['quality']
 										for file in files['files']['movie']:
 											releases = releases + file + ';'
 										releases = releases[:-1]
