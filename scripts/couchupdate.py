@@ -97,7 +97,7 @@ class couchupdate:
 								except:
 									rating = 0
 								releases = releases[:-1]		
-								cursor.execute("INSERT INTO `couchpotato` (`name`,`synopsis`,`imdb`,`noteimdb`,`quality`,`_id`, `image`, `files`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (movie['title'], movie['info']['plot'], movie['identifiers']['imdb'], str(rating), quality, movie['_id'], poster, files))
+								cursor.execute("INSERT INTO `couchpotato` (`name`,`synopsis`,`imdb`,`noteimdb`,`quality`,`_id`, `image`, `files`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (movie['title'], movie['info']['plot'], movie['identifiers']['imdb'], str(rating), quality, movie['_id'], poster, releases))
 						except MySQLdb.Error, e:
 							try:
 								print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
