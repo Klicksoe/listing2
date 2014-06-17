@@ -1,5 +1,6 @@
 site:
     theme: bootstrap
+    title: Titre du site
     base: /
 database:
     host: localhost
