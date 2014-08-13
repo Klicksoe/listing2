@@ -156,16 +156,20 @@ $app->get('/index', function() use ($app) {
 			case 'couchpotato':
 				$class = new Couchpotato\Couchpotato($app['db']);
 				$widget = $class::widget($app['db'], $key, $value['start_path']);
+				$widgets[$key] = array(
+					'name'		=> $value['title'],
+					'widget'	=> $widget,
+				);
 				break;
 			case 'sickbeard':
 				$class = new Sickbeard\Sickbeard($app['db']);
 				$widget = $class::widget($app['db'], $key, $value['start_path']);
+				$widgets[$key] = array(
+					'name'		=> $value['title'],
+					'widget'	=> $widget,
+				);
 				break;
 		}
-		$widgets[$key] = array(
-			'name'		=> $value['title'],
-			'widget'	=> $widget,
-		);
 	}
 	
 	return $app['twig']->render('index.twig', array(
