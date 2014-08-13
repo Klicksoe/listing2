@@ -57,17 +57,17 @@ class Sick:
 		stream = urllib2.urlopen('http://' + sickconf['host'] + ':' + sickconf['port'] + sickconf['basename'] + 'api/' + sickconf['api_key'] + '/?cmd=show.getbanner&tvdbid='+id)
 		if os.path.isfile('../web/assets/sickbeard/banner.' + id + '.jpg'):
 			os.remove('../web/assets/sickbeard/banner.' + id + '.jpg')
-			banner = open('../web/assets/sickbeard/banner.' + id + '.jpg', 'wb')
-			banner.write(stream.read())
-			banner.close()
+		banner = open('../web/assets/sickbeard/banner.' + id + '.jpg', 'wb')
+		banner.write(stream.read())
+		banner.close()
 
 	def getPoster(self, sickconf, id):
 		stream = urllib2.urlopen('http://' + sickconf['host'] + ':' + sickconf['port'] + sickconf['basename'] + 'api/' + sickconf['api_key'] + '/?cmd=show.getposter&tvdbid='+id)
 		if os.path.isfile('../web/assets/sickbeard/poster.' + id + '.jpg'):
 			os.remove('../web/assets/sickbeard/poster.' + id + '.jpg')
-			poster = open('../web/assets/sickbeard/poster.' + id + '.jpg', 'wb')
-			poster.write(stream.read())
-			poster.close()
+		poster = open('../web/assets/sickbeard/poster.' + id + '.jpg', 'wb')
+		poster.write(stream.read())
+		poster.close()
 
 	def getAllIDSeries(self, sickconf):
 		allidseries = {}
