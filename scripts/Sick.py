@@ -34,7 +34,7 @@ class Sick:
 		return allsick
 
 	def getConfiguration(self):
-		stream = file('../listing2/config.yml', 'r')
+		stream = file('../config.yml', 'r')
 		data = yaml.load(stream)
 		return data
 
