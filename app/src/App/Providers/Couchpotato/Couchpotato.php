@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Providers\Couchpotato;
+
 use Doctrine\DBAL\Connection;
 
 class Couchpotato{
@@ -13,6 +15,27 @@ class Couchpotato{
 	// default function for getting submenu associated to functions
 	public static function submenu() {
 		return array('index' => 'couchpotato.index', 'last' => 'couchpotato.last');
+	}
+	
+	public static function widget($db, $provider, $start_path="") {
+		global $app;
+		global $config;
+		
+		if (isset($config['providers'][$provider]['start_path']) && !empty($config['providers'][$provider]['start_path'])) {
+			$search = ' WHERE files LIKE "'.$config['providers'][$provider]['start_path'].'%"';
+		}
+		$stmt = $db->executeQuery('SELECT * FROM `couchpotato` '.$search.' ORDER BY `date` DESC, `name` LIMIT 0,12');
+		
+		$movies = array();
+		while ($movie = $stmt->fetch()) {
+			$movies[] = array(
+				'title'	=> $movie['name'],
+				'id'	=> $movie['imdb'],
+				'img'	=> $movie['image'],
+				'link'	=> $app['url_generator']->generate('list', array('provider' => $provider, 'func' => 'index')),
+			);
+		}
+		return $movies;
 	}
 	
 	// fonction associée au sousmenu

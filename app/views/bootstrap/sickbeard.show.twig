@@ -18,7 +18,7 @@
 			{% if config['providers'][focus]['download'] %}
 				{% for num, episode in numepisode %}
 					<tr>
-						<td class="col-lg-1">{{ num }}</td>
+						<td class="col-lg-1" id="{{ season }}x{{ num }}">{{ num }}</td>
 						<td class="col-lg-10">{{ episode.name }}</td>
 						<td class="col-lg-1 text-center">
 							<a class="glyphicon glyphicon-download" target="_blank" href="{{ app.request.getSchemeAndHttpHost() ~ app.request.getBaseURL() }}/uploads{{ episode.path }}"></a>
@@ -27,7 +27,7 @@
 				{% endfor %}
 			{% else %}
 				{% for num, episode in numepisode %}
-					<tr>
+					<tr id="{{ season }}x{{ num }}">
 						<td class="col-lg-1">{{ num }}</td>
 						<td class="col-lg-11">{{ episode.name }}</td>
 					</tr>

@@ -166,7 +166,7 @@ class Couch:
 				else:
 					self.insertMovie(cursor, movie)
 	
-		self.logger.info('Clear old episodes and shows')
+		self.logger.info('Clear old movies')
 		cursor.execute("DELETE FROM `couchpotato` WHERE `updated`='0'")
 		
 		if cursor:

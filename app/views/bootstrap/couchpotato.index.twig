@@ -7,7 +7,7 @@
 <hr />
 {% for movie in data %}
 <div class="bs-docs-section">
-<div class="row">
+<div class="row" id="{{ movie.imdb }}">
 	<div class="col-lg-2 text-center">
 		<img class="lazy" data-original="{{ movie.image }}" alt="{{ movie.name }}" />
 	</div>

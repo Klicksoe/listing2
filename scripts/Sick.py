@@ -61,6 +61,14 @@ class Sick:
 			banner.write(stream.read())
 			banner.close()
 
+	def getPoster(self, sickconf, id):
+		stream = urllib2.urlopen('http://' + sickconf['host'] + ':' + sickconf['port'] + sickconf['basename'] + 'api/' + sickconf['api_key'] + '/?cmd=show.getposter&tvdbid='+id)
+		if os.path.isfile('../web/assets/sickbeard/poster.' + id + '.jpg'):
+			os.remove('../web/assets/sickbeard/poster.' + id + '.jpg')
+			poster = open('../web/assets/sickbeard/poster.' + id + '.jpg', 'wb')
+			poster.write(stream.read())
+			poster.close()
+
 	def getAllIDSeries(self, sickconf):
 		allidseries = {}
 		stream = urllib2.urlopen('http://' + sickconf['host'] + ':' + sickconf['port'] + sickconf['basename'] + 'api/' + sickconf['api_key'] + '/?cmd=shows')
@@ -176,6 +184,7 @@ class Sick:
 			allid = self.getAllIDSeries(sickconf)
 			for (id, idshow) in allid.items():
 				self.getBanner(sickconf, idshow)
+				self.getPoster(sickconf, idshow)
 				serie = self.getSerie(sickconf, idshow)
 				if self.existSerie(cursor, idshow):
 					self.updateSerie(cursor, idshow, serie)

@@ -2,6 +2,9 @@
 
 require_once __DIR__.'/../vendor/autoload.php';
 
+use App\Providers\Sickbeard;
+use App\Providers\Couchpotato;
+
 # Define silex application
 $app = new Silex\Application(); 
 $app['debug'] = true;
@@ -76,15 +79,19 @@ foreach($config['providers'] as $key => $value) {
 			'link'		=> $value['link'],
 		);
 	} else {
-	if (is_file('../app/src/App/Providers/'.ucfirst($value['type']).'/'.ucfirst($value['type']).'.class.php')) {
-			require_once '../app/src/App/Providers/'.ucfirst($value['type']).'/'.ucfirst($value['type']).'.class.php';
-			$classname = ucfirst($value['type']);
-			$menu[$key] = array(
-				'name'		=> $value['title'],
-				'submenu'	=> $classname::submenu(),
-				'link'		=> false,
-			);
+		switch ($value['type']) {
+			case 'couchpotato':
+				$class = new Couchpotato\Couchpotato($app['db']);
+				break;
+			case 'sickbeard':
+				$class = new Sickbeard\Sickbeard($app['db']);
+				break;
 		}
+		$menu[$key] = array(
+			'name'		=> $value['title'],
+			'submenu'	=> $class::submenu(),
+			'link'		=> false,
+		);
 	}
 }
 
@@ -119,18 +126,18 @@ $app['translator'] = $app->share($app->extend('translator', function($translator
 #################################################################################################
 #										404														#
 #################################################################################################
-$app->error(function (\Exception $e, $code) {
-	global $app;
-    switch ($code) {
-        case 404:
-			return $app->redirect($app['url_generator']->generate('404'));
-            break;
-        default:
-            $message = 'We are sorry, but something went terribly wrong.';
-    }
+// $app->error(function (\Exception $e, $code) {
+	// global $app;
+    // switch ($code) {
+        // case 404:
+			// return $app->redirect($app['url_generator']->generate('404'));
+            // break;
+        // default:
+            // $message = 'We are sorry, but something went terribly wrong.';
+    // }
 
-    return new Symfony\Component\HttpFoundation\Response($message);
-});
+    // return new Symfony\Component\HttpFoundation\Response($message);
+// });
 
 
 #################################################################################################
@@ -138,11 +145,32 @@ $app->error(function (\Exception $e, $code) {
 #################################################################################################
 $app->get('/', function() use ($app) {
 	return $app->redirect($app['url_generator']->generate('index'));
-});
+})->bind('base');
 
 $app->get('/index', function() use ($app) {
+	global $config;
+	
+	$widgets = array();
+	foreach($config['providers'] as $key => $value) {
+		switch ($value['type']) {
+			case 'couchpotato':
+				$class = new Couchpotato\Couchpotato($app['db']);
+				$widget = $class::widget($app['db'], $key, $value['start_path']);
+				break;
+			case 'sickbeard':
+				$class = new Sickbeard\Sickbeard($app['db']);
+				$widget = $class::widget($app['db'], $key, $value['start_path']);
+				break;
+		}
+		$widgets[$key] = array(
+			'name'		=> $value['title'],
+			'widget'	=> $widget,
+		);
+	}
+	
 	return $app['twig']->render('index.twig', array(
-		'focus' => 'index',
+		'focus' 	=> 'index',
+		'widgets'	=> $widgets,
 	));
 })->bind('index');
 
@@ -184,19 +212,25 @@ $app->get('/list/{provider}/{func}', function($provider, $func) use ($app) {
 	// test if URI is defined in configuration file
 	if (isset($config['providers'][$provider])) {
 		// test if provider exist
-		if (is_file('../app/src/App/Providers/'.ucfirst($config['providers'][$provider]['type']).'/'.ucfirst($config['providers'][$provider]['type']).'.class.php')) {
-			$classname = ucfirst($config['providers'][$provider]['type']);
-			require_once '../app/src/App/Providers/'.$classname.'/'.$classname.'.class.php';
-			$class = new $classname($app['db']);
-			
-			// test if method exist in provider
-			if (method_exists($class, $func)) {
-				return $class->$func($provider);
-			} else {
+		switch ($config['providers'][$provider]['type']) {
+			case 'couchpotato':
+				$class = new Couchpotato\Couchpotato($app['db']);
+				if (method_exists($class, $func)) {
+					return $class->$func($provider);
+				} else {
+					return $app->redirect($app['url_generator']->generate('list', array('provider' => $provider, 'func' => 'index')));
+				}
+				break;
+			case 'sickbeard':
+				$class = new Sickbeard\Sickbeard($app['db']);
+				if (method_exists($class, $func)) {
+					return $class->$func($provider);
+				} else {
+					return $app->redirect($app['url_generator']->generate('list', array('provider' => $provider, 'func' => 'index')));
+				}
+				break;
+			default:
 				return $app->redirect($app['url_generator']->generate('list', array('provider' => $provider, 'func' => 'index')));
-			}
-		} else {
-			return $app->redirect($app['url_generator']->generate('list', array('provider' => $provider, 'func' => 'index')));
 		}
 	} else {
 		return $app->redirect($app['url_generator']->generate('index'));

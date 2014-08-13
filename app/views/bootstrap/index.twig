@@ -2,15 +2,20 @@
 
 {%  block content %}
 
-<div class="container">
+<div class="container widgets">
 
 <div class="page-header" id="banner"></div>
 
+{% for widget in widgets %}
+<h2>{{ widget.name }}</h2>
 <div class="row">
-<div class="col-lg-12">
-<img src="http://www.pratikable.com/wp-content/uploads/2014/05/welcome.jpg" alt="WELCOME" class="img-responsive"/>
+	{% for data in widget.widget %}
+	<div class="col-lg-1 col-md-2 col-sm-3 col-xs-4 widget_index">
+		<a href="{{ data.link }}#{{ data.id }}"><img src="{{ data.img }}" alt="{{ data.title }}" class="img-responsive" /></a>
+	</div>
+	{% endfor %}
 </div>
-</div>
+{% endfor %}
 </div>
 
 {% endblock %}

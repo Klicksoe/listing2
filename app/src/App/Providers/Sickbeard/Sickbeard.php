@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Providers\Sickbeard;
+
 use Doctrine\DBAL\Connection;
 
 class Sickbeard {
@@ -13,6 +15,27 @@ class Sickbeard {
 	// default function for getting submenu associated to functions
 	public static function submenu() {
 		return array('index' => 'sickbeard.index', 'last' => 'sickbeard.last');
+	}
+	
+	public static function widget($db, $provider, $start_path="") {
+		global $app;
+		global $config;
+		
+		if (isset($config['providers'][$provider]['start_path']) && !empty($config['providers'][$provider]['start_path'])) {
+			$search = ' WHERE se.`path` LIKE "'.$config['providers'][$provider]['start_path'].'%"';
+		}
+		$stmt = $db->executeQuery('SELECT s.name, se.season, se.episode, se._id FROM `sickbeard_episodes` se LEFT JOIN `sickbeard` as s ON s._id=se._id '.$search.' ORDER BY `date` DESC LIMIT 0,10');
+		$episodes = array();
+		while ($episode = $stmt->fetch()) {
+			$episodes[] = array(
+				'title'	=> $episode['name'].' '.$episode['season'].'x'.$episode['episode'],
+				'id'	=> $episode['season'].'x'.$episode['episode'],
+				'img'	=> $app['url_generator']->generate('base').'assets/sickbeard/banner.'.$episode['_id'].'.jpg',
+				'link'	=> $app['url_generator']->generate('list', array('provider' => $provider, 'func' => 'show')).'?id='.$episode['_id'],
+			);
+		}
+		return $episodes;
+		return true;
 	}
 	
 	// fonction associée au sousmenu
