@@ -126,18 +126,18 @@ $app['translator'] = $app->share($app->extend('translator', function($translator
 #################################################################################################
 #										404														#
 #################################################################################################
-// $app->error(function (\Exception $e, $code) {
-	// global $app;
-    // switch ($code) {
-        // case 404:
-			// return $app->redirect($app['url_generator']->generate('404'));
-            // break;
-        // default:
-            // $message = 'We are sorry, but something went terribly wrong.';
-    // }
+$app->error(function (\Exception $e, $code) {
+	global $app;
+    switch ($code) {
+        case 404:
+			return $app->redirect($app['url_generator']->generate('404'));
+            break;
+        default:
+            $message = 'We are sorry, but something went terribly wrong.';
+    }
 
-    // return new Symfony\Component\HttpFoundation\Response($message);
-// });
+    return new Symfony\Component\HttpFoundation\Response($message);
+});
 
 
 #################################################################################################
