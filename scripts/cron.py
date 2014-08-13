@@ -19,9 +19,9 @@ if len(sys.argv) != 2:
 if sys.argv[1] == "update":
 	Couch().update()
 	Sick().update()
-else if sys.argv[1] == "updatesick":
+elif sys.argv[1] == "updatesick":
 	Sick().update()
-else if sys.argv[1] == "updatecouch":
+elif sys.argv[1] == "updatecouch":
 	couch().update()
 else:
 	cmds()
