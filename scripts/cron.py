@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
-# from newsletter import newsletter
-from couchupdate import couchupdate
-from sickupdate import sickupdate
+from Couch import Couch
+from Sick import Sick
 
 def cmds():
 	print("commandes")
@@ -18,11 +17,11 @@ if len(sys.argv) != 2:
 
 	
 if sys.argv[1] == "update":
-	print couchupdate().updateCouch()
-	print sickupdate().updateSick()
-if sys.argv[1] == "updatesick":
-	print sickupdate().updateSick()
-if sys.argv[1] == "updatecouch":
-	print couchupdate().updateCouch()
+	Couch().update()
+	Sick().update()
+else if sys.argv[1] == "updatesick":
+	Sick().update()
+else if sys.argv[1] == "updatecouch":
+	couch().update()
 else:
 	cmds()
