@@ -24,7 +24,7 @@ class Sickbeard {
 		if (isset($config['providers'][$provider]['start_path']) && !empty($config['providers'][$provider]['start_path'])) {
 			$search = ' WHERE se.`path` LIKE "'.$config['providers'][$provider]['start_path'].'%"';
 		}
-		$stmt = $db->executeQuery('SELECT s.name, se.season, se.episode, se._id FROM `sickbeard_episodes` se LEFT JOIN `sickbeard` as s ON s._id=se._id '.$search.' ORDER BY `date` DESC LIMIT 0,10');
+		$stmt = $db->executeQuery('SELECT s.name, se.season, se.episode, se._id FROM `sickbeard_episodes` se LEFT JOIN `sickbeard` as s ON s._id=se._id '.$search.' ORDER BY `date` DESC LIMIT 0,12');
 		$episodes = array();
 		while ($episode = $stmt->fetch()) {
 			$episodes[] = array(
