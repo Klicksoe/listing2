@@ -22,6 +22,6 @@ if sys.argv[1] == "update":
 elif sys.argv[1] == "updatesick":
 	Sick().update()
 elif sys.argv[1] == "updatecouch":
-	couch().update()
+	Couch().update()
 else:
 	cmds()
