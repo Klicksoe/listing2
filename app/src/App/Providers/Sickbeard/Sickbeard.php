@@ -30,7 +30,7 @@ class Sickbeard {
 			$episodes[] = array(
 				'title'	=> $episode['name'].' '.$episode['season'].'x'.$episode['episode'],
 				'id'	=> $episode['season'].'x'.$episode['episode'],
-				'img'	=> $app['url_generator']->generate('base').'assets/sickbeard/banner.'.$episode['_id'].'.jpg',
+				'img'	=> $app['url_generator']->generate('base').'assets/sickbeard/poster.'.$episode['_id'].'.jpg',
 				'link'	=> $app['url_generator']->generate('list', array('provider' => $provider, 'func' => 'show')).'?id='.$episode['_id'],
 			);
 		}
