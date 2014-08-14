@@ -13,8 +13,13 @@ class Sickbeard {
     }
 	
 	// default function for getting submenu associated to functions
-	public static function submenu() {
-		return array('index' => 'sickbeard.index', 'last' => 'sickbeard.last100');
+	public static function submenu($provider) {
+		global $config;
+		$submenu = array('index' => 'sickbeard.index', 'last' => 'sickbeard.last100');
+		if (isset($config['providers'][$provider]['allowadd']) && $config['providers'][$provider]['allowadd'] == True) {
+			$submenu['addshow'] = 'sickbeard.addshow';
+		}
+		return $submenu;
 	}
 	
 	public static function widget($db, $provider, $start_path="") {
@@ -54,6 +59,10 @@ class Sickbeard {
 			'data' => $stmt->fetchall(),
 			'title' => 'sickbeard.index',
 		));
+	}
+	
+	public function addshow() {
+		return true;
 	}
 	
 	// fonction associée au sousmenu

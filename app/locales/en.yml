@@ -7,9 +7,13 @@ site.logout: Logout
 site.username: Username
 site.password: Password
 site.admin: Administration
+site.search: Search
 couchpotato.index: All movies
 couchpotato.last100: Lastest 100 movies
+couchpotato.addmovie: Add a movie
+couchpotato.searchmovie: Search a movie
 sickbeard.index: All TV Shows
 sickbeard.last100: Last 100 episodes
 sickbeard.season: Season
 sickbeard.episode: Episode
+sickbeard.addshow: Add a TV Show

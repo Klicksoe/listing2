@@ -89,7 +89,7 @@ foreach($config['providers'] as $key => $value) {
 		}
 		$menu[$key] = array(
 			'name'		=> $value['title'],
-			'submenu'	=> $class::submenu(),
+			'submenu'	=> $class::submenu($key),
 			'link'		=> false,
 		);
 	}

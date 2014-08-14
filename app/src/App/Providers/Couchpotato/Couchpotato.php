@@ -13,8 +13,13 @@ class Couchpotato{
     }
 	
 	// default function for getting submenu associated to functions
-	public static function submenu() {
-		return array('index' => 'couchpotato.index', 'last' => 'couchpotato.last100');
+	public static function submenu($provider) {
+		global $config;
+		$submenu = array('index' => 'couchpotato.index', 'last' => 'couchpotato.last100');
+		if (isset($config['providers'][$provider]['allowadd']) && $config['providers'][$provider]['allowadd'] == True) {
+			$submenu['addmovie'] = 'couchpotato.addmovie';
+		}
+		return $submenu;
 	}
 	
 	public static function widget($db, $provider, $start_path="") {
@@ -52,6 +57,28 @@ class Couchpotato{
 			'focus' => $provider,
 			'data' => $stmt->fetchall(),
 			'title' => 'couchpotato.index',
+		));
+	}
+	
+	public function addmovie($provider) {
+		global $app;
+		global $config;
+		
+		if (isset($_GET['search']) && !empty($_GET['search'])) {
+			$apiurl = 'http://'.$config['providers'][$provider]['config']['host'].':'.$config['providers'][$provider]['config']['port'].$config['providers'][$provider]['config']['basename'].'/api/'.$config['providers'][$provider]['config']['api_key'].'/search/?q='.$_GET['search'];
+			$api = file_get_contents($apiurl);
+			$json = json_decode($api);
+			$search = $_GET['search'];
+			$data = $json['movies'];
+		} else {
+			$search = '';
+			$data = '';
+		}
+		return $app['twig']->render('couchpotato.add.twig', array(
+			'focus' => $provider,
+			'search' => $search,
+			'data' => $data,
+			'title' => 'couchpotato.addmovie',
 		));
 	}
 	

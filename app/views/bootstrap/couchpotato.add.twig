@@ -1,0 +1,26 @@
+{% extends "layout.twig" %}
+
+{%  block content %}
+<div class="container">
+<div class="page-header" id="banner"></div>
+<h2>{{ app.translator.trans(title) }}</h2>
+<hr />
+<div class="row">
+	<form >
+		<div class="form-group">
+			<div class="col-sm-11">
+				<input type="text" name="search" class="form-control" placeholder="{{ app.translator.trans('couchpotato.searchmovie') }}" value="{{ search }}" />
+			</div>
+			<div class="col-sm-1">
+				<input type="submit" class="btn btn-default" value="{{ app.translator.trans('site.search') }}" />
+			</div>
+		</div>
+	</form>
+</div>
+{% for movie in data %}
+	{% if movie['in_library'] != false %}
+		{{ movie['title'] }}<br />
+	{% endif %}
+{% endfor %}
+</div>
+{% endblock %}
