@@ -14,7 +14,7 @@ class Sickbeard {
 	
 	// default function for getting submenu associated to functions
 	public static function submenu() {
-		return array('index' => 'sickbeard.index', 'last' => 'sickbeard.last');
+		return array('index' => 'sickbeard.index', 'last' => 'sickbeard.last100');
 	}
 	
 	public static function widget($db, $provider, $start_path="") {

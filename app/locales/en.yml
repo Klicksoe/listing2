@@ -1,5 +1,6 @@
 site.listing: Listing
 site.home: Home
+site.last: Lastest updates
 site.profil: Profil
 site.login: Login
 site.logout: Logout
@@ -7,8 +8,8 @@ site.username: Username
 site.password: Password
 site.admin: Administration
 couchpotato.index: All movies
-couchpotato.last: Lastest 100 movies
+couchpotato.last100: Lastest 100 movies
 sickbeard.index: All TV Shows
-sickbeard.last: Last 100 episodes
+sickbeard.last100: Last 100 episodes
 sickbeard.season: Season
 sickbeard.episode: Episode

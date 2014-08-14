@@ -14,7 +14,7 @@ class Couchpotato{
 	
 	// default function for getting submenu associated to functions
 	public static function submenu() {
-		return array('index' => 'couchpotato.index', 'last' => 'couchpotato.last');
+		return array('index' => 'couchpotato.index', 'last' => 'couchpotato.last100');
 	}
 	
 	public static function widget($db, $provider, $start_path="") {
