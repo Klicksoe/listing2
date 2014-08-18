@@ -5,6 +5,15 @@
 <div class="page-header" id="banner"></div>
 <h2>{{ app.translator.trans(title) }}</h2>
 <hr />
+{% if returncode != '' %}
+<div class="row">
+	{% if returncode == false %}
+	<p class="bg-danger">{{ app.translator.trans('couchpotato.failadd') }}</p>
+	{% else %}
+	<p class="bg-success">{{ returncode }} - {{ app.translator.trans('couchpotato.successfulladd') }}</p>
+	{% endif %}
+</div>
+{% endif %}
 <div class="row">
 	<form >
 		<div class="form-group">
@@ -17,10 +26,27 @@
 		</div>
 	</form>
 </div>
-{% for movie in data %}
-	{% if movie['in_library'] != false %}
-		{{ movie['title'] }}<br />
+{% if data['movies'] is defined %}
+{% for movie in data['movies'] %}
+	{% if movie['in_library'] == false %}
+	<div class="row">
+		<div class="col-lg-1">
+			{% if movie['images']['poster'][0] is not empty %}
+			<img src="{{ movie['images']['poster'][0] }}" class="center-block img-responsive text-center" />
+			{% endif %}
+		</div>
+		<div class="col-lg-10">
+			<h2><a href="http://www.imdb.com/title/{{ movie['imdb'] }}/" target="_blank">{{ movie['original_title'] }}</a></h2>
+			{{ movie['plot'] }}
+		</div>
+		<div class="col-lg-1">
+			{% if movie['in_wanted'] == false %}
+			<a href="?add={{ movie['imdb'] }}&search={{ search }}" class="btn btn-default btn-block">{{ app.translator.trans('site.add') }}</a>
+			{% endif %}
+		</div>
+	</div>
 	{% endif %}
 {% endfor %}
+{% endif %}
 </div>
 {% endblock %}

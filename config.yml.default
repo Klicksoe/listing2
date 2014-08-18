@@ -13,6 +13,7 @@ providers:
         type: sickbeard
         start_path: "/volume1/video/séries/"
         download: 1
+        allowadd: 1
         config:
             host: 192.168.0.203
             port: 8083
@@ -22,6 +23,7 @@ providers:
         title: Films
         type: couchpotato
         download: 0
+        allowadd: 1
         start_path: "/volume1/video/films/"
         config:
             host: 192.168.0.203

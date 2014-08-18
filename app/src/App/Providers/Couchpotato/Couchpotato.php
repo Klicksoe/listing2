@@ -64,21 +64,34 @@ class Couchpotato{
 		global $app;
 		global $config;
 		
-		if (isset($_GET['search']) && !empty($_GET['search'])) {
-			$apiurl = 'http://'.$config['providers'][$provider]['config']['host'].':'.$config['providers'][$provider]['config']['port'].$config['providers'][$provider]['config']['basename'].'/api/'.$config['providers'][$provider]['config']['api_key'].'/search/?q='.$_GET['search'];
+		$returncode = '';
+		if (isset($_GET['add']) && preg_match("/tt\d{7}/", $_GET['add'])) {
+			$apiurl = 'http://'.$config['providers'][$provider]['config']['host'].':'.$config['providers'][$provider]['config']['port'].$config['providers'][$provider]['config']['basename'].'api/'.$config['providers'][$provider]['config']['api_key'].'/movie.add/?identifier='.$_GET['add'];
 			$api = file_get_contents($apiurl);
-			$json = json_decode($api);
+			$json = json_decode($api, true);
+			if (isset($json['success']) && $json['success'] == 'true') {
+				$returncode = $json['movie']['info']['original_title'];
+			} else {
+				$returncode = false;
+			}
+		}
+		
+		if (isset($_GET['search']) && !empty($_GET['search'])) {
+			$apiurl = 'http://'.$config['providers'][$provider]['config']['host'].':'.$config['providers'][$provider]['config']['port'].$config['providers'][$provider]['config']['basename'].'api/'.$config['providers'][$provider]['config']['api_key'].'/search/?q='.$_GET['search'];
+			$api = file_get_contents($apiurl);
+			$data = json_decode($api, true);
 			$search = $_GET['search'];
-			$data = $json['movies'];
 		} else {
 			$search = '';
 			$data = '';
 		}
+		
 		return $app['twig']->render('couchpotato.add.twig', array(
-			'focus' => $provider,
-			'search' => $search,
-			'data' => $data,
-			'title' => 'couchpotato.addmovie',
+			'returncode'=> $returncode,
+			'focus'		=> $provider,
+			'search'	=> $search,
+			'data'		=> $data,
+			'title'		=> 'couchpotato.addmovie',
 		));
 	}
 	

@@ -8,10 +8,13 @@ site.username: Username
 site.password: Password
 site.admin: Administration
 site.search: Search
+site.add: Add
 couchpotato.index: All movies
 couchpotato.last100: Lastest 100 movies
 couchpotato.addmovie: Add a movie
 couchpotato.searchmovie: Search a movie
+couchpotato.successfulladd: The movie has been added.
+couchpotato.failadd: An error occured when adding the movie.
 sickbeard.index: All TV Shows
 sickbeard.last100: Last 100 episodes
 sickbeard.season: Season

@@ -8,10 +8,13 @@ site.username: Nom d'utilisateur
 site.password: Mot de passe
 site.admin: Administration
 site.search: Rechercher
+site.add: Ajouter
 couchpotato.index: Tous les films
 couchpotato.last100: 100 Derniers films
 couchpotato.addmovie: Ajouter un film
 couchpotato.searchmovie: Rechercher un film
+couchpotato.successfulladd: Le film a bien été ajouté.
+couchpotato.failadd: Une erreur est survenue lors de l'ajout du film.
 sickbeard.index: Toutes les séries
 sickbeard.last100: 100 Derniers épisodes
 sickbeard.season: Saison
