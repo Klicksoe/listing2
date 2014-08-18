@@ -28,7 +28,7 @@
 </div>
 {% if data['movies'] is defined %}
 {% for movie in data['movies'] %}
-	{% if movie['in_library'] == false %}
+	{% if (movie['in_library'] == false) and (movie['imdb'] is defined) %}
 	<div class="row">
 		<div class="col-lg-1">
 			{% if movie['images']['poster'][0] is defined %}
