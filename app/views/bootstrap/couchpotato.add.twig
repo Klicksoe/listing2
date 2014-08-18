@@ -31,13 +31,15 @@
 	{% if movie['in_library'] == false %}
 	<div class="row">
 		<div class="col-lg-1">
-			{% if movie['images']['poster'][0] is not empty %}
+			{% if movie['images']['poster'][0] is defined %}
 			<img src="{{ movie['images']['poster'][0] }}" class="center-block img-responsive text-center" />
 			{% endif %}
 		</div>
 		<div class="col-lg-10">
 			<h2><a href="http://www.imdb.com/title/{{ movie['imdb'] }}/" target="_blank">{{ movie['original_title'] }}</a></h2>
+			{% if  movie['plot'] is defined %}
 			{{ movie['plot'] }}
+			{% endif %}
 		</div>
 		<div class="col-lg-1">
 			{% if movie['in_wanted'] == false %}
