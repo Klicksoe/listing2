@@ -77,7 +77,7 @@ class Couchpotato{
 		}
 		
 		if (isset($_GET['search']) && !empty($_GET['search'])) {
-			$apiurl = 'http://'.$config['providers'][$provider]['config']['host'].':'.$config['providers'][$provider]['config']['port'].$config['providers'][$provider]['config']['basename'].'api/'.$config['providers'][$provider]['config']['api_key'].'/search/?q='.htmlentities($_GET['search']);
+			$apiurl = 'http://'.$config['providers'][$provider]['config']['host'].':'.$config['providers'][$provider]['config']['port'].$config['providers'][$provider]['config']['basename'].'api/'.$config['providers'][$provider]['config']['api_key'].'/search/?q='.urlencode($_GET['search']);
 			$api = file_get_contents($apiurl);
 			$data = json_decode($api, true);
 			$search = $_GET['search'];
