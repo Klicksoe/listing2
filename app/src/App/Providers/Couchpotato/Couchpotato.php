@@ -68,7 +68,7 @@ class Couchpotato{
 		if (isset($_GET['add']) && preg_match("/tt\d{7}/", $_GET['add'])) {
 			$apiurl = 'http://'.$config['providers'][$provider]['config']['host'].':'.$config['providers'][$provider]['config']['port'].$config['providers'][$provider]['config']['basename'].'api/'.$config['providers'][$provider]['config']['api_key'].'/movie.add/?identifier='.$_GET['add'];
 			$api = file_get_contents($apiurl);
-			$json = json_decode($api, true);
+			$json = json_decode($api);
 			if (isset($json['success']) && $json['success'] == 'true') {
 				$returncode = $json['movie']['info']['original_title'];
 			} else {
@@ -79,7 +79,7 @@ class Couchpotato{
 		if (isset($_GET['search']) && !empty($_GET['search'])) {
 			$apiurl = 'http://'.$config['providers'][$provider]['config']['host'].':'.$config['providers'][$provider]['config']['port'].$config['providers'][$provider]['config']['basename'].'api/'.$config['providers'][$provider]['config']['api_key'].'/search/?q='.$_GET['search'];
 			$api = file_get_contents($apiurl);
-			$data = json_decode($api, true);
+			$data = json_decode($api);
 			$search = $_GET['search'];
 		} else {
 			$search = '';
