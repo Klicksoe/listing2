@@ -108,7 +108,7 @@ class Couchpotato{
 		return $app['twig']->render('couchpotato.index.twig', array(
 			'focus' => $provider,
 			'data' => $stmt->fetchall(),
-			'title' => 'couchpotato.last',
+			'title' => 'couchpotato.last100',
 		));
 	}
 }
