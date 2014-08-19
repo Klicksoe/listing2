@@ -78,7 +78,7 @@ class Sickbeard {
 		return $app['twig']->render('sickbeard.last.twig', array(
 			'focus' => $provider,
 			'data' => $stmt->fetchall(),
-			'title' => 'sickbeard.last',
+			'title' => 'sickbeard.last100',
 		));
 	}
 	
