@@ -11,7 +11,7 @@ site.search: Rechercher
 site.add: Ajouter
 couchpotato.index: Tous les films
 couchpotato.last100: 100 Derniers films
-couchpotato.addmovie: Ajouter un film
+couchpotato.addmovie: Demander un film
 couchpotato.searchmovie: Rechercher un film
 couchpotato.successfulladd: Le film a bien été ajouté.
 couchpotato.failadd: Une erreur est survenue lors de l'ajout du film.
