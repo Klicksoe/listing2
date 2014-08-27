@@ -11,7 +11,7 @@ site.search: Search
 site.add: Add
 couchpotato.index: All movies
 couchpotato.last100: Lastest 100 movies
-couchpotato.addmovie: Add a movie
+couchpotato.addmovie: Ask a movie
 couchpotato.searchmovie: Search a movie
 couchpotato.successfulladd: The movie has been added.
 couchpotato.failadd: An error occured when adding the movie.
