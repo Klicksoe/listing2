@@ -34,9 +34,9 @@ class Sickbeard {
 		while ($episode = $stmt->fetch()) {
 			$episodes[] = array(
 				'title'	=> $episode['name'].' '.$episode['season'].'x'.$episode['episode'],
-				'id'	=> $episode['season'].'x'.$episode['episode'],
+				'id'	=> $episode['_id'].'-'.$episode['season'].'x'.$episode['episode'],
 				'img'	=> $app['url_generator']->generate('base').'assets/sickbeard/poster.'.$episode['_id'].'.jpg',
-				'link'	=> $app['url_generator']->generate('list', array('provider' => $provider, 'func' => 'show')).'?id='.$episode['_id'],
+				'link'	=> $app['url_generator']->generate('list', array('provider' => $provider, 'func' => 'last')),
 			);
 		}
 		return $episodes;
@@ -59,6 +59,16 @@ class Sickbeard {
 			'data' => $stmt->fetchall(),
 			'title' => 'sickbeard.index',
 		));
+	}
+	
+	
+	public function reload($provider) {
+		global $config;
+		
+		$appli = $config['providers'][$provider]['config'];
+		$apiurl = 'http://'.$config['providers'][$provider]['config']['host'].':'.$config['providers'][$provider]['config']['port'].$config['providers'][$provider]['config']['basename'].'/home/postprocess/processEpisode?quiet=1';
+		$api = file_get_contents($apiurl);
+		return 'sickbeard';
 	}
 	
 	public function addshow() {

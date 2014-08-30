@@ -15,7 +15,7 @@ class Couchpotato{
 	// default function for getting submenu associated to functions
 	public static function submenu($provider) {
 		global $config;
-		$submenu = array('index' => 'couchpotato.index', 'last' => 'couchpotato.last100');
+		$submenu = array('index' => 'couchpotato.index', 'last' => 'couchpotato.last100', 'wanted' => 'couchpotato.wanted');
 		if (isset($config['providers'][$provider]['allowadd']) && $config['providers'][$provider]['allowadd'] == True) {
 			$submenu['addmovie'] = 'couchpotato.addmovie';
 		}
@@ -37,7 +37,7 @@ class Couchpotato{
 				'title'	=> $movie['name'],
 				'id'	=> $movie['imdb'],
 				'img'	=> $movie['image'],
-				'link'	=> $app['url_generator']->generate('list', array('provider' => $provider, 'func' => 'index')),
+				'link'	=> $app['url_generator']->generate('list', array('provider' => $provider, 'func' => 'last')),
 			);
 		}
 		return $movies;
@@ -60,9 +60,28 @@ class Couchpotato{
 		));
 	}
 	
+	
+	public function reload($provider) {
+		global $config;
+		
+		$appli = $config['providers'][$provider]['config'];
+		$apiurl = 'http://'.$config['providers'][$provider]['config']['host'].':'.$config['providers'][$provider]['config']['port'].$config['providers'][$provider]['config']['basename'].'api/'.$config['providers'][$provider]['config']['api_key'].'/renamer.scan?async=1';
+		$api = file_get_contents($apiurl);
+		$json = json_decode($api, true);
+		if ($json['success'] == true) {
+			return 'couchpotato';
+		} else {
+			return false;
+		}
+	}
+	
 	public function addmovie($provider) {
 		global $app;
 		global $config;
+		
+		if ($config['providers'][$provider]['allowadd'] !== (int)1) {
+			return $app->redirect($app['url_generator']->generate('list', array('provider' => $provider, 'func' => 'index')));
+		}
 		
 		$returncode = '';
 		if (isset($_GET['add']) && preg_match("/tt\d{7}/", $_GET['add'])) {
@@ -92,6 +111,22 @@ class Couchpotato{
 			'search'	=> $search,
 			'data'		=> $data,
 			'title'		=> 'couchpotato.addmovie',
+		));
+	}
+	
+	// fonction associée au sousmenu
+	public function wanted($provider, $start_path="") {
+		global $app;
+		global $config;
+		
+		$apiurl = 'http://'.$config['providers'][$provider]['config']['host'].':'.$config['providers'][$provider]['config']['port'].$config['providers'][$provider]['config']['basename'].'api/'.$config['providers'][$provider]['config']['api_key'].'/media.list/?type=movie&status=active';
+		$api = file_get_contents($apiurl);
+		$data = json_decode($api, true);
+		
+		return $app['twig']->render('couchpotato.wanted.twig', array(
+			'focus' => $provider,
+			'data' => $data,
+			'title' => 'couchpotato.wanted',
 		));
 	}
 	

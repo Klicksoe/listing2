@@ -1,0 +1,21 @@
+{% extends "layout.twig" %}
+
+{%  block content %}
+
+ <div class="row">
+	<div class="col-lg-1">
+		<ul class="nav nav-pills nav-stacked">
+			<li{% if adminfocus == 'dashboard' %} class="active"{% endif %}><a href="{{ url('admindashboard') }}">Dashboard</a></li>
+			<li{% if adminfocus == 'users' %} class="active"{% endif %}><a href="{{ url('adminusers') }}">Users</a></li>
+			<li{% if adminfocus == 'newsletter' %} class="active"{% endif %}><a href="{{ url('adminnewsletter') }}">Newsletter</a></li>
+			<li{% if adminfocus == 'configurator' %} class="active"{% endif %}><a href="{{ url('adminconfigurator') }}">Configurator</a></li>
+			<li{% if adminfocus == 'configuration' %} class="active"{% endif %}><a href="{{ url('adminconfiguration') }}">Configuration</a></li>
+		</ul>
+	</div>
+	<div class="col-lg-11">
+		{%  block contentadmin %}
+		{% endblock %}
+	</div>
+</div>
+
+{% endblock %}

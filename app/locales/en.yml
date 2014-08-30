@@ -11,12 +11,17 @@ site.search: Search
 site.add: Add
 couchpotato.index: All movies
 couchpotato.last100: Lastest 100 movies
-couchpotato.addmovie: Ask a movie
+couchpotato.addmovie: Request a movie
+couchpotato.alreadywanted: Already requested
+couchpotato.requestthismovie: Request this movie
 couchpotato.searchmovie: Search a movie
 couchpotato.successfulladd: The movie has been added.
+couchpotato.wanted: Requested movies
 couchpotato.failadd: An error occured when adding the movie.
 sickbeard.index: All TV Shows
 sickbeard.last100: Last 100 episodes
 sickbeard.season: Season
 sickbeard.episode: Episode
 sickbeard.addshow: Add a TV Show
+sickbeard.searchshow: Search a TV show
+sickbeard.requestthisshow: Request this TV Show

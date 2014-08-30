@@ -2,12 +2,11 @@
 
 {%  block content %}
 <div class="container">
-<div class="page-header" id="banner"></div>
 <h2>{{ app.translator.trans(title) }}</h2>
 <hr />
 <div class="row">
 {% for show in data %}
-	<div class="col-lg-6">
+	<div class="col-lg-6" id="{{ show._id ~ '-' ~ show.season ~ 'x' ~ show.episode }}">
 		<a href="{{ url('list', {'provider': focus, 'func': 'show'}) }}?id={{ show._id }}" style="position:relative;">
 			<img src="{{ app.request.basepath }}/assets/sickbeard/banner.{{ show._id }}.jpg" class="img-responsive" />
 			<div style="position:relative; bottom:22px; line-height:22px; background-color:black; opacity:0.8; text-align:left; padding: 0px 10px; color:white;">{{ show.showname ~ ' ' ~ show.season ~ 'x' ~ show.episode }}</div>

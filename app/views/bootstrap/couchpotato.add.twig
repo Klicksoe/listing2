@@ -2,7 +2,6 @@
 
 {%  block content %}
 <div class="container">
-<div class="page-header" id="banner"></div>
 <h2>{{ app.translator.trans(title) }}</h2>
 <hr />
 {% if returncode != '' %}
@@ -15,7 +14,7 @@
 </div>
 {% endif %}
 <div class="row">
-	<form >
+	<form>
 		<div class="form-group">
 			<div class="col-sm-11">
 				<input type="text" name="search" class="form-control" placeholder="{{ app.translator.trans('couchpotato.searchmovie') }}" value="{{ search }}" />
@@ -32,7 +31,7 @@
 	<div class="row">
 		<div class="col-lg-1">
 			{% if movie['images']['poster'][0] is defined %}
-			<img src="{{ movie['images']['poster'][0] }}" class="center-block img-responsive text-center" />
+			<img src="{{ movie['images']['poster'][0] }}" class="center-block img-responsive text-center" alt="{{ movie['original_title'] }}" />
 			{% endif %}
 		</div>
 		<div class="col-lg-10">
@@ -44,6 +43,8 @@
 		<div class="col-lg-1">
 			{% if movie['in_wanted'] == false %}
 			<a href="?add={{ movie['imdb'] }}&search={{ search }}" class="btn btn-default btn-block">{{ app.translator.trans('site.add') }}</a>
+			{% else %}
+			{{ app.translator.trans('couchpotato.alreadywanted') }}
 			{% endif %}
 		</div>
 	</div>

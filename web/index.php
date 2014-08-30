@@ -95,13 +95,21 @@ foreach($config['providers'] as $key => $value) {
 	}
 }
 
+# conf from db
+$dbconf = array();
+$stmt = $app['db']->executeQuery("SELECT * FROM `config`");
+while ($data = $stmt->fetch()) {
+	$dbconf[$data['name']] = $data['value'];
+}
 
 # Add global variables on twig
 $app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
 	global $config;
 	global $menu;
+	global $dbconf;
     $twig->addGlobal('config', $config);
     $twig->addGlobal('menu', $menu);
+    $twig->addGlobal('dbconf', $dbconf);
     return $twig;
 }));
 
@@ -126,18 +134,18 @@ $app['translator'] = $app->share($app->extend('translator', function($translator
 #################################################################################################
 #										404														#
 #################################################################################################
-$app->error(function (\Exception $e, $code) {
-	global $app;
-    switch ($code) {
-        case 404:
-			return $app->redirect($app['url_generator']->generate('404'));
-            break;
-        default:
-            $message = 'We are sorry, but something went terribly wrong.';
-    }
+// $app->error(function (\Exception $e, $code) {
+	// global $app;
+    // switch ($code) {
+        // case 404:
+			// return $app->redirect($app['url_generator']->generate('404'));
+            // break;
+        // default:
+            // $message = 'We are sorry, but something went terribly wrong.';
+    // }
 
-    return new Symfony\Component\HttpFoundation\Response($message);
-});
+    // return new Symfony\Component\HttpFoundation\Response($message);
+// });
 
 
 #################################################################################################
@@ -188,9 +196,77 @@ $app->get('/admin/', function() use ($app) {
 	return $app->redirect($app['url_generator']->generate('admindashboard'));
 })->bind('admin');
 
-$app->get('/admin/dashboard/', function() use ($app) {
-	return 'admin dash';
+$app->get('/admin/dashboard/', function() use ($app, $config) {
+
+	// reorganise configuration
+	$providers = array();
+	foreach ($config['providers'] as $name => $provider) {
+		if ($provider['type'] == 'sickbeard' || $provider['type'] == 'couchpotato') {
+			$providers[$provider['config']['host'].$provider['config']['port'].$provider['config']['basename'].$provider['config']['api_key']] = array(
+				'host'		=> $provider['config']['host'],
+				'port'		=> $provider['config']['port'],
+				'basename'	=> $provider['config']['basename'],
+				'api_key'	=> $provider['config']['api_key'],
+				'titles'	=> array_merge((array)$provider['title'], (array)@$providers[$provider['config']['host'].$provider['config']['port'].$provider['config']['basename'].$provider['config']['api_key']]['titles']),
+				'name'		=> $name,
+				'type'		=> $provider['type'],
+			);
+		}
+	}
+	
+	$returncode = '';
+	if (isset($_GET['reload']) && !empty($_GET['reload'])) {
+		if (array_key_exists($_GET['reload'], $config['providers'])) {
+			switch($config['providers'][$_GET['reload']]['type']) {
+				case 'couchpotato':
+					$class = new Couchpotato\Couchpotato($app['db']);
+					$returncode = $class->reload($_GET['reload']);
+					break;
+				case 'sickbeard':
+					$class = new Sickbeard\Sickbeard($app['db']);
+					$returncode = $class->reload($_GET['reload']);
+					break;
+			
+			}
+		}
+	}
+	
+	
+	return $app['twig']->render('admin.index.twig', array(
+		'returncode'	=> $returncode,
+		'focus'			=> 'admin',
+		'adminfocus'	=> 'dashboard',
+		'providers'		=> $providers,
+	));
 })->bind('admindashboard');
+
+$app->get('/admin/users/', function() use ($app) {
+	return $app['twig']->render('admin.index.twig', array(
+		'focus'			=> 'admin',
+		'adminfocus'	=> 'users',
+	));
+})->bind('adminusers');
+
+$app->get('/admin/newsletter/', function() use ($app) {
+	return $app['twig']->render('admin.index.twig', array(
+		'focus'			=> 'admin',
+		'adminfocus'	=> 'newsletter',
+	));
+})->bind('adminnewsletter');
+
+$app->get('/admin/configurator/', function() use ($app) {
+	return $app['twig']->render('admin.index.twig', array(
+		'focus'			=> 'admin',
+		'adminfocus'	=> 'configurator',
+	));
+})->bind('adminconfigurator');
+
+$app->get('/admin/configuration/', function() use ($app) {
+	return $app['twig']->render('admin.index.twig', array(
+		'focus'			=> 'admin',
+		'adminfocus'	=> 'configuration',
+	));
+})->bind('adminconfiguration');
 
 $app->get('/login', function(Symfony\Component\HttpFoundation\Request $request) use ($app) {
 	return $app['twig']->render('login.twig', array(

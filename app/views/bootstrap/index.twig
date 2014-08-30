@@ -3,10 +3,11 @@
 {%  block content %}
 
 <div class="container widgets">
-<div class="page-header" id="banner"></div>
 <h2>{{ app.translator.trans('site.last') }}</h2>
 <hr />
-
+{% if dbconf.notice is defined and dbconf.notice is not empty %}
+<div class="alert alert-info">{{ dbconf.notice }}</div>
+{% endif %}
 {% for widget in widgets %}
 <h2>{{ widget.name }}</h2>
 <div class="row">

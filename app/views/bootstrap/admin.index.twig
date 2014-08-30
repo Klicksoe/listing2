@@ -1,0 +1,30 @@
+{% extends "admin.layout.twig" %}
+
+{% block contentadmin %}
+
+<h2>Scan folders</h2>
+<hr />
+
+{% if returncode != '' %}
+<div class="row">
+	{% if returncode == false %}
+	<p class="bg-danger">Can't launch renammer</p>
+	{% else %}
+	<p class="bg-success">{{ returncode }} - Renammer successfully launched</p>
+	{% endif %}
+</div>
+{% endif %}
+
+<div class="row">
+<table class="table table-striped">
+<thead><tr><th>Application</th><th>Associated tabs</th><th class="text-center">Reload</th></tr></thead>
+{% for provider in providers %}
+<tr>
+	<td>{{ provider.type }}</td>
+	<td>{{ provider.titles|join(', ') }}</td>
+	<td class="text-center"><a class="btn glyphicon glyphicon-refresh" href="{{ url('admindashboard') }}?reload={{ provider.name }}"></a></td>
+</tr>
+{% endfor %}
+</table>
+</div>
+{% endblock %}

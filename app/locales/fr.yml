@@ -12,11 +12,16 @@ site.add: Ajouter
 couchpotato.index: Tous les films
 couchpotato.last100: 100 Derniers films
 couchpotato.addmovie: Demander un film
+couchpotato.alreadywanted: Déjà demandé
+couchpotato.requestthismovie: Demander ce film
 couchpotato.searchmovie: Rechercher un film
 couchpotato.successfulladd: Le film a bien été ajouté.
+couchpotato.wanted: Films demandés
 couchpotato.failadd: Une erreur est survenue lors de l'ajout du film.
 sickbeard.index: Toutes les séries
 sickbeard.last100: 100 Derniers épisodes
 sickbeard.season: Saison
 sickbeard.episode: Épisode
 sickbeard.addshow: Ajouter une série
+sickbeard.searchshow: Rechercher une série
+sickbeard.requestthisshow: Demander cette série

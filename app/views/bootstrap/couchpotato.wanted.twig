@@ -38,33 +38,24 @@ $(document).ready(function(){
 	</form>
 </div>
 <div class="filter_list">
-{% for movie in data %}
+{% if data['movies'] is defined %}
+{% for movie in data['movies'] %}
 <div class="bs-docs-section">
-<div class="row" id="{{ movie.imdb }}">
+<div class="row" id="{{ movie.identifiers.imdb }}">
 	<div class="col-lg-2 text-center">
-		<img class="lazy" data-original="{{ movie.image }}" alt="{{ movie.name }}" />
+		{% if movie['info']['images']['poster'][0] is defined %}
+		<img src="{{ movie['info']['images']['poster'][0] }}" class="center-block img-responsive text-center" alt="{{ movie.title }}" />
+		{% endif %}
 	</div>
-	{% if config['providers'][focus]['download'] %}
-	<div class="col-lg-9">
-		<h2 style="display: inline-block;">{{ movie.name }}</h2>
-		<div style="display: inline-block; float: right;">{{ movie.quality }} - Note : <a class="text-right" href="http://www.imdb.com/title/{{ movie.imdb }}/" target="_blank">{{ movie.noteimdb }}</a></div>
-		<p class="text-justify">{{ movie.synopsis }}</p>
-	</div>
-	<div class="col-lg-1 text-center">
-		{% for file in movie.files|split(';') %}
-			<a class="glyphicon glyphicon-download" target="_blank" href="{{ app.request.basepath }}/uploads{{ file }}"></a>
-		{% endfor %}
-	</div>
-	{% else %}
 	<div class="col-lg-10">
-			<h2 style="display: inline-block;">{{ movie.name }}</h2>
-			<div style="display: inline-block; float: right;">{{ movie.quality }} - Note : <a class="text-right" href="http://www.imdb.com/title/{{ movie.imdb }}/" target="_blank">{{ movie.noteimdb }}</a></div>
-			<p class="text-justify">{{ movie.synopsis }}</p>
+			<h2 style="display: inline-block;">{{ movie.title }}</h2>
+			<div style="display: inline-block; float: right;">Note : <a class="text-right" href="http://www.imdb.com/title/{{ movie.info.imdb }}/" target="_blank">{{ movie['info']['rating']['imdb'][0]|default('NA') }}</a></div>
+			<p class="text-justify">{{ movie['info']['plot'] }}</p>
 	</div>
-	{% endif %}
 </div>
 </div>
 {% endfor %}
+{% endif %}
 </div>
 </div>
 {% endblock %}

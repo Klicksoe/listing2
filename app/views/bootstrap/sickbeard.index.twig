@@ -1,11 +1,43 @@
 {% extends "layout.twig" %}
 
 {%  block content %}
+<script type="text/javascript">
+$(document).ready(function(){
+    $("#filter").keyup(function(){
+		var filter = $(this).val(), count = 0;
+        $(".filter_list div.col-lg-6").each(function(){
+            if ($(this).find("div").text().search(new RegExp(filter, "i")) < 0) {
+                $(this).fadeOut();
+            } else {
+                $(this).show();
+				count++;
+            }
+        });
+    });
+});
+</script>
 <div class="container">
-<div class="page-header" id="banner"></div>
 <h2>{{ app.translator.trans(title) }}</h2>
 <hr />
 <div class="row">
+	<form action="{{ url('list', {'provider': focus, 'func': 'addshow'}) }}" method="get">
+		<div class="form-group">
+			{% if config['providers'][focus]['allowadd'] %}
+			<div class="col-lg-10">
+				<input class="form-control" placeholder="{{ app.translator.trans('sickbeard.searchshow') }}" id="filter" name="search" />
+			</div>
+			<div class="col-lg-2">
+				<input type="submit" class="form-control btn btn-default" value="{{ app.translator.trans('sickbeard.requestthisshow') }}" />
+			</div>
+			{% else %}
+			<div class="col-lg-12">
+				<input class="form-control" placeholder="{{ app.translator.trans('sickbeard.searchshow') }}" id="filter" name="search" />
+			</div>	
+			{% endif %}
+		</div>
+	</form>
+</div>
+<div class="row filter_list">
 {% for show in data %}
 	<div class="col-lg-6">
 		<a href="{{ url('list', {'provider': focus, 'func': 'show'}) }}?id={{ show._id }}" style="position:relative;">
