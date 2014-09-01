@@ -119,8 +119,9 @@ $app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
 }));
 
 # Add translation provider
+$userlangage = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
 $app->register(new Silex\Provider\TranslationServiceProvider(), array(
-	'locale'			=> substr(explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE'])[0], 0, 2),
+	'locale'			=> substr($userlangage[0], 0, 2),
     'locale_fallback' 	=> 'en',
 ));
 
@@ -139,18 +140,18 @@ $app['translator'] = $app->share($app->extend('translator', function($translator
 #################################################################################################
 #										404														#
 #################################################################################################
-// $app->error(function (\Exception $e, $code) {
-	// global $app;
-    // switch ($code) {
-        // case 404:
-			// return $app->redirect($app['url_generator']->generate('404'));
-            // break;
-        // default:
-            // $message = 'We are sorry, but something went terribly wrong.';
-    // }
+$app->error(function (\Exception $e, $code) {
+	global $app;
+    switch ($code) {
+        case 404:
+			return $app->redirect($app['url_generator']->generate('404'));
+            break;
+        default:
+            $message = 'We are sorry, but something went terribly wrong.';
+    }
 
-    // return new Symfony\Component\HttpFoundation\Response($message);
-// });
+    return new Symfony\Component\HttpFoundation\Response($message);
+});
 
 
 #################################################################################################
