@@ -138,8 +138,7 @@ $app['translator'] = $app->share($app->extend('translator', function($translator
 }));
 
 $app->before(function (Request $request) use ($app) {
-	$locale = $request->getLocale();
-	$app['translator']->setLocale($locale);
+	$app['translator']->setLocale($request->getLocale());
 });
 
 #################################################################################################
