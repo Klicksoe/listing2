@@ -4,6 +4,8 @@ require_once __DIR__.'/../vendor/autoload.php';
 
 use App\Providers\Sickbeard;
 use App\Providers\Couchpotato;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 # Define silex application
 $app = new Silex\Application(); 
@@ -31,6 +33,9 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
 
 # Add Session support
 $app->register(new Silex\Provider\SessionServiceProvider());
+
+# Add form support
+$app->register(new Silex\Provider\FormServiceProvider());
 
 # Add URL generator
 $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
@@ -241,40 +246,252 @@ $app->get('/admin/dashboard/', function() use ($app, $config) {
 })->bind('admindashboard');
 
 $app->get('/admin/users/', function() use ($app) {
-	return $app['twig']->render('admin.index.twig', array(
+	if (!$app['security']->isGranted('ROLE_ADMIN')) {
+		return $app->redirect($app['url_generator']->generate('login'));
+    }
+    $error = array();
+
+	try {
+		$listusers = $app['db']->fetchAll("SELECT id, username, roles FROM users ORDER BY username, roles");
+	} catch(Exception $e) {
+		$error[] = $e->getMessage();
+	}
+
+    return $app['twig']->render('admin.users.twig', array(
 		'focus'			=> 'admin',
 		'adminfocus'	=> 'users',
+		'data'			=> $listusers,
+		'error'			=> $error
 	));
 })->bind('adminusers');
 
-$app->get('/admin/newsletter/', function() use ($app) {
-	return $app['twig']->render('admin.index.twig', array(
-		'focus'			=> 'admin',
-		'adminfocus'	=> 'newsletter',
-	));
-})->bind('adminnewsletter');
+$app->get('/admin/users/delete/{id}', function($id) use ($app) {
+	if (!$app['security']->isGranted('ROLE_ADMIN')) {
+		return $app->redirect($app['url_generator']->generate('login'));
+    }
+    $error = array();
 
-$app->get('/admin/configurator/', function() use ($app) {
-	return $app['twig']->render('admin.index.twig', array(
-		'focus'			=> 'admin',
-		'adminfocus'	=> 'configurator',
-	));
-})->bind('adminconfigurator');
+	try {
+		$app['db']->delete('users', array(
+			'id'	=> $id,
+		));
+		return $app->redirect($app['url_generator']->generate('adminusers'));
+	} catch(Exception $e) {
+		$error[] = $e->getMessage();
+	}
 
-$app->get('/admin/configuration/', function() use ($app) {
-	return $app['twig']->render('admin.index.twig', array(
+    return $error;
+})->bind('admindeleteusers');
+
+$app->match('/admin/users/edit/{id}', function(Request $request, $id) use ($app) {
+	if (!$app['security']->isGranted('ROLE_ADMIN')) {
+		return $app->redirect($app['url_generator']->generate('login'));
+    }
+    $error = array();
+	$retour = '';
+
+	try {
+		$user = $app['db']->fetchAssoc("SELECT id, username, roles FROM users WHERE id=:id", array(
+			'id'	=> $id,
+		));
+		
+		$form = $app['form.factory']->createBuilder('form')
+			->add('name', 'text', array(
+				'label'		=> 'Name',
+				'data'		=> $user['username'],
+				'required'	=> true,
+				'attr'		=> array('placeholder' => 'Name'),
+			))
+			->add('password', 'password', array(
+				'label'		=> 'Password',
+				'required'	=> false,
+				'attr'		=> array('placeholder' => 'Password'),
+			))
+			->add('admin','checkbox',array(
+				'label'		=> 'Admin',
+				'required'	=> false,
+				'attr'		=> ($user['roles'] == 'ROLE_ADMIN')?array('checked' => 'checked'):array(),
+			))
+			->getForm();
+
+		if ('POST' == $request->getMethod()) {
+	
+			$form->bind($request);
+
+			if ($form->isValid()) {
+				$data = $form->getData();
+				$password=$app['security.encoder.digest']->encodePassword($data['password'],'');
+				
+				
+				$role = 'ROLE_USER';
+				if($data['admin']==true){
+					$role = 'ROLE_ADMIN';
+				}
+				
+				try{
+					if (empty($data['password'])) {
+						$sql = "UPDATE users SET username=:username, roles=:role WHERE id=:id";
+						$app['db']->executeUpdate($sql, array(
+							'username'	=> $data['name'],
+							'role'		=> $role,
+							'id'		=> (int) $id,
+						));
+					} else {
+						$sql = "UPDATE users SET username=:username, roles=:role, password=:password WHERE id=:id";
+						$app['db']->executeUpdate($sql, array(
+							'username'	=> $data['name'],
+							'role'		=> $role,
+							'password'	=> $password,
+							'id'		=> (int) $id,
+						));
+					}
+					$retour = 'User have been updated';
+					
+					// rechargement des données
+					$user = $app['db']->fetchAssoc("SELECT id, username, roles FROM users WHERE id=:id", array(
+						'id'	=> $id,
+					));
+				} catch(Exception $e){
+					$error[] = "Can't update user";
+				}
+
+			}
+		}	
+	} catch(Exception $e) {
+		$error[] = $e->getMessage();
+	}
+
+    return $app['twig']->render('admin.users.form.twig', array(
+		'focus'			=> 'admin',
+		'adminfocus'	=> 'users',
+		'form'			=> $form->createView(),
+		'error'			=> $error,
+		'retour'		=> $retour,
+	));
+	
+})->bind('admineditusers');
+
+$app->match('/admin/users/add', function(Request $request) use ($app) {
+	if (!$app['security']->isGranted('ROLE_ADMIN')) {
+		return $app->redirect($app['url_generator']->generate('login'));
+    }
+    $error = array();
+
+    $form = $app['form.factory']->createBuilder('form')
+        ->add('name', 'text', array(
+			'label'	=> 'Name',
+			'required'	=> true,
+			'attr'	=> array('placeholder' => 'Name'),
+		))
+        ->add('password', 'password', array(
+			'label'	=> 'Password',
+			'required'	=> true,
+			'attr' => array('placeholder' => 'Password'),
+		))
+        ->add('admin','checkbox',array(
+			'label'		=> 'Admin',
+			'required'	=> false,
+			'attr'		=> array('checked' => 'checked'),
+		))
+        ->getForm();
+
+    if ('POST' == $request->getMethod()) {
+		
+        $form->bind($request);
+
+        if ($form->isValid()) {
+			$data = $form->getData();
+			$password=$app['security.encoder.digest']->encodePassword($data['password'],'');
+			
+			
+			$role = 'ROLE_USER';
+            if($data['admin']==true){
+				$role = 'ROLE_ADMIN';
+            }
+			
+			try{
+				$app['db']->insert('users', array(
+					'username' => $data['name'],
+					'password' => $password,
+					'roles' => $role
+				)); 
+				return $app->redirect($app['url_generator']->generate('adminusers'));
+			} catch(Exception $e){
+				$error[] = "Existing user";
+			}
+
+        }
+    }
+
+    return $app['twig']->render('admin.users.form.twig', array(
+		'focus'			=> 'admin',
+		'adminfocus'	=> 'users',
+		'form'			=> $form->createView(),
+		'error'			=> $error
+	));
+
+})->bind('adminaddusers');
+
+
+$app->match('/admin/configuration/', function(Request $request) use ($app, $dbconf) {
+	if (!$app['security']->isGranted('ROLE_ADMIN')) {
+		return $app->redirect($app['url_generator']->generate('login'));
+    }
+    $error = array();
+	$retour = '';
+
+    $form = $app['form.factory']->createBuilder('form')
+        ->add('notice', 'text', array(
+			'label'	=> 'Notice',
+			'data'	=> @$dbconf['notice'],
+			'required'	=> true,
+			'attr'	=> array('placeholder' => 'Notice'),
+		))
+        ->getForm();
+
+    if ('POST' == $request->getMethod()) {
+		
+        $form->bind($request);
+
+        if ($form->isValid()) {
+			$data = $form->getData();
+			
+			try{
+				$stmt = $app['db']->prepare("TRUNCATE TABLE `config`");
+				$stmt->execute();
+				$app['db']->insert('config', array(
+					'name' => 'notice',
+					'value' => $data['notice'],
+				)); 
+				$retour = 'Configuration updated';
+			} catch(Exception $e){
+				$error[] = $e->getMessage();
+			}
+
+        }
+    }
+
+    return $app['twig']->render('admin.configuration.twig', array(
 		'focus'			=> 'admin',
 		'adminfocus'	=> 'configuration',
+		'form'			=> $form->createView(),
+		'error'			=> $error,
+		'retour'		=> $retour,
 	));
 })->bind('adminconfiguration');
 
-$app->get('/login', function(Symfony\Component\HttpFoundation\Request $request) use ($app) {
+$app->get('/login', function(Request $request) use ($app) {
 	return $app['twig']->render('login.twig', array(
 		'error' => $app['security.last_error']($request),
 		'focus' => 'admin',
 		'last_username' => $app['session']->get('_security.last_username'),
 	));
 })->bind('login');
+
+$app->get('/admin/logout', function(Request $request) use ($app) {
+	$app['session']->set('isAuthenticated', false);
+    return $app['login.basic_login_response'];
+})->bind('logout');
 
 $app->get('/list/{provider}/', function($provider) use ($app) {
 	global $config;

@@ -1,0 +1,21 @@
+{% extends "admin.layout.twig" %}
+
+{% block contentadmin %}
+
+<h2>Users <span class="badge"><a href="{{ url('adminaddusers') }}">Add</a></span></h2>
+<hr />
+
+<div class="row">
+<table class="table table-striped">
+<thead><tr><th>Edit</th><th>Username</th><th>Level</th><th class="text-right">Delete</th></tr></thead>
+{% for user in data %}
+	<tr>
+		<td><a href="{{ url('admineditusers', {id:user.id}) }}" class="glyphicon glyphicon-edit"></a></td>
+		<td>{{ user.username }}</td>
+		<td>{{ user.roles|slice(5) }}</td>
+		<td class="text-right"><a href="{{ url('admindeleteusers', {id:user.id}) }}" class="glyphicon glyphicon-remove"></a></td>
+	</tr>
+{% endfor %}
+</table>
+</div>
+{% endblock %}
