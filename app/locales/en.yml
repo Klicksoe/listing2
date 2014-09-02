@@ -22,6 +22,7 @@ sickbeard.index: All TV Shows
 sickbeard.last100: Last 100 episodes
 sickbeard.season: Season
 sickbeard.episode: Episode
-sickbeard.addshow: Add a TV Show
+sickbeard.addshow: Request a TV Show
 sickbeard.searchshow: Search a TV show
 sickbeard.requestthisshow: Request this TV Show
+sickbeard.successfulladd: The TV Show has been added.

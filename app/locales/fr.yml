@@ -22,6 +22,7 @@ sickbeard.index: Toutes les séries
 sickbeard.last100: 100 Derniers épisodes
 sickbeard.season: Saison
 sickbeard.episode: Épisode
-sickbeard.addshow: Ajouter une série
+sickbeard.addshow: Demander une série
 sickbeard.searchshow: Rechercher une série
 sickbeard.requestthisshow: Demander cette série
+sickbeard.successfulladd: La série a bien été ajoutée.

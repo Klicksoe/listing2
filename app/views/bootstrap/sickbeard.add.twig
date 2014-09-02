@@ -1,0 +1,41 @@
+{% extends "layout.twig" %}
+
+{%  block content %}
+<div class="container">
+<h2>{{ app.translator.trans(title) }}</h2>
+<hr />
+{% if returncode != '' %}
+<div class="row">
+	{% if returncode == false %}
+	<p class="bg-danger">{{ app.translator.trans('sickbeard.failadd') }}</p>
+	{% else %}
+	<p class="bg-success">{{ returncode }} - {{ app.translator.trans('sickbeard.successfulladd') }}</p>
+	{% endif %}
+</div>
+{% endif %}
+<div class="row">
+	<form>
+		<div class="form-group">
+			<div class="col-sm-11">
+				<input type="text" name="search" class="form-control" placeholder="{{ app.translator.trans('sickbeard.searchshow') }}" value="{{ search }}" />
+			</div>
+			<div class="col-sm-1">
+				<input type="submit" class="btn btn-default" value="{{ app.translator.trans('site.search') }}" />
+			</div>
+		</div>
+	</form>
+</div>
+{% if data is defined and data is not empty %}
+{% for show in data %}
+	<div class="row">
+		<div class="col-lg-11">
+			<h2><a href="http://thetvdb.com/?tab=series&id={{ show['tvdbid'] }}&lid={{ langid }}" target="_blank">{{ show['name'] }}</a></h2>
+		</div>
+		<div class="col-lg-1">
+			<a href="?add={{ show['tvdbid'] }}&search={{ search }}" class="btn btn-default btn-block">{{ app.translator.trans('site.add') }}</a>
+		</div>
+	</div>
+{% endfor %}
+{% endif %}
+</div>
+{% endblock %}

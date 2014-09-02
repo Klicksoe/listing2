@@ -65,14 +65,74 @@ class Sickbeard {
 	public function reload($provider) {
 		global $config;
 		
-		$appli = $config['providers'][$provider]['config'];
 		$apiurl = 'http://'.$config['providers'][$provider]['config']['host'].':'.$config['providers'][$provider]['config']['port'].$config['providers'][$provider]['config']['basename'].'/home/postprocess/processEpisode?quiet=1';
 		$api = file_get_contents($apiurl);
 		return 'sickbeard';
 	}
 	
-	public function addshow() {
-		return true;
+	public function addshow($provider) {
+		global $app;
+		global $config;
+		
+		if ($config['providers'][$provider]['allowadd'] !== (int)1) {
+			return $app->redirect($app['url_generator']->generate('list', array('provider' => $provider, 'func' => 'index')));
+		}
+		
+		$returncode = '';
+		$langid = '';
+		
+		if (isset($_GET['add']) && preg_match("/\d/", $_GET['add'])) {
+			$apiurl = 'http://'.$config['providers'][$provider]['config']['host'].':'.$config['providers'][$provider]['config']['port'].$config['providers'][$provider]['config']['basename'].'api/'.$config['providers'][$provider]['config']['api_key'].'/?cmd=show.addnew&tvdbid='.$_GET['add'];
+			$api = file_get_contents($apiurl);
+			$json = json_decode($api, true);
+			if (isset($json['result']) && $json['result'] == 'success') {
+				$returncode = $json['data']['name'];
+			} else {
+				$returncode = false;
+			}
+		}
+		
+		if (isset($_GET['search']) && !empty($_GET['search'])) {
+			$apiurl = 'http://'.$config['providers'][$provider]['config']['host'].':'.$config['providers'][$provider]['config']['port'].$config['providers'][$provider]['config']['basename'].'home/addShows/searchTVDBForShowName?name='.urlencode($_GET['search']);
+			$api = file_get_contents($apiurl);
+			$json = json_decode($api, true);
+			$data = array();
+			$langid = $json['langid'];
+			
+			// get actual tv show from api
+			$apiurl = 'http://'.$config['providers'][$provider]['config']['host'].':'.$config['providers'][$provider]['config']['port'].$config['providers'][$provider]['config']['basename'].'api/'.$config['providers'][$provider]['config']['api_key'].'/?cmd=shows';
+			$api = file_get_contents($apiurl);
+			$actualshow = json_decode($api, true);
+			$allshows = array();
+			foreach($actualshow['data'] as $aid => $ashow) {
+				$allshow[$aid] = $aid;
+			}
+			
+			foreach($json['results'] as $show) {
+				if (!in_array($show[0], $allshow)) {
+					$data[] = array(
+						'tvdbid'	=> $show[0],
+						'name'		=> $show[1],
+						'data'		=> $show[2],
+					);
+				}
+			}
+			
+			
+			$search = $_GET['search'];
+		} else {
+			$search = '';
+			$data = '';
+		}
+		
+		return $app['twig']->render('sickbeard.add.twig', array(
+			'returncode'=> $returncode,
+			'focus'		=> $provider,
+			'search'	=> $search,
+			'data'		=> $data,
+			'title'		=> 'sickbeard.addshow',
+			'langid'	=> $langid,
+		));
 	}
 	
 	// fonction associée au sousmenu
@@ -114,9 +174,9 @@ class Sickbeard {
 		}
 		
 		return $app['twig']->render('sickbeard.show.twig', array(
-			'focus' => $provider,
-			'show' => $stmt->fetch(),
-			'episodes' => $episodes,
+			'focus' 	=> $provider,
+			'show' 		=> $stmt->fetch(),
+			'episodes' 	=> $episodes,
 		));
 	}
 	
