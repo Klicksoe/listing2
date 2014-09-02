@@ -449,7 +449,7 @@ $app->match('/admin/configuration/', function(Request $request) use ($app, $dbco
         ->add('notice', 'text', array(
 			'label'	=> 'Notice',
 			'data'	=> @$dbconf['notice'],
-			'required'	=> true,
+			'required'	=> false,
 			'attr'	=> array('placeholder' => 'Notice'),
 		))
         ->getForm();
